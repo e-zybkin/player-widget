@@ -1,0 +1,18 @@
+.music-card{
+  max-width: 360px;
+  min-height: 58px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #FFF;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.after-block{
+  display: flex;
+  align-items: center;
+}
+
+.timer {
+  color: #818C99;
+}
