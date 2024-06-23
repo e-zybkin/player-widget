@@ -4,7 +4,7 @@ import styles from "./App.module.css";
 function App() {
   return (
     <div className={styles.page}>
-      <Player audioSrc="/audio/The Messenger.mp3" />
+      <Player audioSrc="/player-widget/audio/The Messenger.mp3" />
     </div>
   );
 }
