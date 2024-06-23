@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+
+import playerStore from "../../stores/PlayerStore";
 
 import {
   Headline,
@@ -23,33 +26,30 @@ interface props {
   audioSrc: string;
 }
 
-function Player({ audioSrc }: props) {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-
+const Player = observer(({ audioSrc }: props) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleTimeUpdate = (): void => {
-    setCurrentTime(audioRef.current?.currentTime || 0);
+    playerStore.setCurrentTime(audioRef.current?.currentTime || 0);
   };
 
   const handlePlay = (): void => {
     audioRef.current && audioRef.current.play();
-    setIsPlaying(true);
+    playerStore.setIsPlaying(true);
   };
 
   const handlePause = (): void => {
     audioRef.current && audioRef.current.pause();
-    setIsPlaying(false);
+    playerStore.setIsPlaying(false);
   };
 
   const handleEnded = (): void => {
-    setIsPlaying(false);
-    setCurrentTime(0);
+    playerStore.setIsPlaying(false);
+    playerStore.setCurrentTime(0);
   };
 
   const handlePlayPause = (): void => {
-    if (isPlaying) {
+    if (playerStore.isPlaying) {
       handlePause();
     } else {
       handlePlay();
@@ -86,7 +86,7 @@ function Player({ audioSrc }: props) {
           borderRadius="m"
           onClick={handlePlayPause}
         >
-          {isPlaying && (
+          {playerStore.isPlaying && (
             <Image.Overlay
               aria-label="Музыкальные волны"
               theme="dark"
@@ -96,14 +96,14 @@ function Player({ audioSrc }: props) {
             </Image.Overlay>
           )}
           <Image.Overlay aria-label="Кнопка Проигрывания/Паузы">
-            {isPlaying ? <Icon20Pause /> : <Icon20Play />}
+            {playerStore.isPlaying ? <Icon20Pause /> : <Icon20Play />}
           </Image.Overlay>
         </Image>
       }
       after={
         <div className={styles["after-block"]}>
           <Footnote className={styles.timer}>
-            {formatTime(currentTime)}
+            {formatTime(playerStore.currentTime)}
           </Footnote>
           <IconButton label="Меню">
             <Icon16MoreVertical />
@@ -116,6 +116,6 @@ function Player({ audioSrc }: props) {
       <audio ref={audioRef} src={audioSrc} />
     </SimpleCell>
   );
-}
+});
 
 export default Player;
